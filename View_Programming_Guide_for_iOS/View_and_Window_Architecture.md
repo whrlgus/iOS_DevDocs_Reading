@@ -1,4 +1,4 @@
-## 1. View and Window Architecture
+## 1. View Architecture Fundamentals
 
 ### View Hierarchies and Subview Management
 
