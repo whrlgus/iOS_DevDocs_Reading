@@ -48,3 +48,28 @@ reverse geocoding은 좌표를 human-readable 주소로 바꾸는 것을 말한�
 - **as!** 는 *downcast*라고도 하며, class와 subclass 간의 캐스팅에 사용된다. Implicitly unwrapped optional 과 같이 안전하지 않은 방식으로, 실패하지 않는다는 보장이 있는 경우에만 사용한다.
 - **as** 는 전혀 실패하지 않는 경우에 사용된다. Swift는 *NSString*과 *String* 간의 casting은 항상 가능하며 이러한 경우에만 사용한다.
 
+
+
+### 25. The Tag Location Screen
+
+##### Create once and re-use
+
+`DateFomatter` 객체와 같이 생성하는 데 상대적으로 오래 걸리는 경우는 global constant로 선언하여 lazy loding 방식으로 값을 초기화 하는 것이 효율적이다. Swift에서 global은 항상 lazy fashion으로 생성된다. 즉,  처음 사용될 때, 생성되고 구성된다.
+
+```swift
+private let dateFormatter: DateFormatter = {
+	let formatter = DateFormatter()
+	formatter.dateStyle = .medium
+	formatter.timeStyle = .short
+	return formatter
+}()
+```
+
+위와 같이 closure를 사용한 객체를 사용하면, 사용할 때 한번만 생성되고, 다음에는 재사용할 수 있는 장점이 있다.
+
+
+
+##### Content Compression Resistance
+
+view에는 **Content Compression Resistance Priority** 라는 것이 있다. 특정 위치의 고유한 크기의 뷰를 압축가능한 여부의 척도가 되는 값을 나타낸다. 즉, 다른 뷰의 우선도가 더 높다면 다른 뷰에 의해서 압축될 수 있다는 말이다. 이 값은 storyboard의 Size inspector에서도 설정할 수 있다.
+
