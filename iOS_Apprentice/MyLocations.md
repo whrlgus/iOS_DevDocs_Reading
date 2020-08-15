@@ -71,5 +71,46 @@ private let dateFormatter: DateFormatter = {
 
 ##### Content Compression Resistance
 
-view에는 **Content Compression Resistance Priority** 라는 것이 있다. 특정 위치의 고유한 크기의 뷰를 압축가능한 여부의 척도가 되는 값을 나타낸다. 즉, 다른 뷰의 우선도가 더 높다면 다른 뷰에 의해서 압축될 수 있다는 말이다. 이 값은 storyboard의 Size inspector에서도 설정할 수 있다.
+view에는 **Content Compression Resistance Priority** (내용 압축 저항 우선순위?) 라는 것이 있다. 뷰에서 표현하려는 내용이 많은 경우에 옆에 있는 다른 뷰가 압축될 수 있고, 압축이 가능한지 여부를 결정짓는 척도이다. 즉, A 뷰의 priority가 B 뷰의 priority보다 더 높다면, A 뷰는 B 뷰에 의해 압축되는 경우는 없고, 반대의 경우는 가능하다는 말이다. 이 값은 storyboard의 Size inspector에서도 설정할 수 있다.
 
+
+
+##### Unwind segue
+
+Unwind segues 는 대게 delegate protocol에 비해 간편하게 controller간 통신을 할 수 있게 해준다. segue를 인자로 받는 IBAction method를 정의하여 이벤트 발생 객체를 storyboard의 Exit에 연결해주면 prepare() method를 거쳐서 정의한 action method의 내용을 실행할 수 있게된다.
+
+
+
+### 26. Adding Polish
+
+##### Keyboard activation
+
+`func becomeFirstResponder() -> Bool` 메소드를 사용해서 키보드를 활성화할 view를 반응하게? 만들어 준다.
+
+
+
+##### UITapGestureRecognizer
+
+Target-action pattern으로 target에 tap 을 하게되면 action에 해당하는 지정된 method를 호출하게 된다. `var cancelsTouchesInView: Bool { get set }` 이란 property는 default가 true로 view에 gesture가 전달되지 않는다. 이 값을 false로 바꾸면, gesture가 전달되어 반응을 하는 코드를 작성할 수 있게 된다.
+
+
+
+##### HUD
+
+Heads-Up Display의 약자로, 일의 진행 상태 혹은, 완료 상태 등을 사용자에게 알려주기 위한 목적으로 사용한다. 
+
+
+
+##### Convenience constructor
+
+class method로 작성하여, `let hubView = HudView()` 대신에 `let hudView = HudView.hud(inView: parentView, animated: true)` 와 같이 instance를 생성할 수 있는 구조(?)를 말한다.
+
+
+
+##### UIView의 draw() method
+
+UIKit 에서 view를 그릴 때마다 호출되는 함수이다. iOS의 모든 것은 event-driven으로 view는 UIKit이 그리라고 하기 전까지는 스크린에 view를 그리지 않는다. 즉, 직접 `draw()` method를 호출할 일이 없다는 말이다. 만약 view를 직접 다시 그리고 싶다면, view의 `setNeedsDisplay()` method를 호출해서 `draw()` method가 호출되도록 하자.
+
+
+
+### 27. Saving Location
