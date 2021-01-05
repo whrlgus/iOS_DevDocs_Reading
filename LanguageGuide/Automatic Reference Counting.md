@@ -150,3 +150,118 @@ optional reference 를 unowned 로 선언할 수도 있다. ARC ownership model�
 
 ### Unowned References and Implicitly Unwrapped Optional Properties
 
+두 property가 항상 값을 가져야 하며, initialization이 완료되면 어떠한 것도 nil이 되면 안되는 상황이 있다. 이 경우 한 class에 unowned property를 사용하고, 다른 class에 implicitly unwrapped optional property를 선언해서 사용하면 된다.
+
+이러면, optional unwrapping 없이, reference cycle도 피하면서 초기화가 완료되면 각 property에 바로 접근할 수 있다. 
+
+아래 예제에는, 두개의 class가 정의돼 있고 서로 다른 class instance를 저장할 수 있는 property가 있다. 
+
+```swift
+class Country {
+    let name: String
+    var capitalCity: City!
+    init(name: String, capitalName: String) {
+        self.name = name
+        self.capitalCity = City(name: capitalName, country: self)
+    }
+}
+
+class City {
+    let name: String
+    unowned let country: Country
+    init(name: String, country: Country) {
+        self.name = name
+        self.country = country
+    }
+}
+```
+
+만약, `Country` 의 `capitailCity` property가 implicitly unwrapped optional 이 아니라면, 값이 설정되기 전에 self를 사용할 수 없다. 결과적으로 한줄의 코드로 두 개의 instance를 생성할 수 있게되며, strong reference cycle을 형성하지 않고, property를 사용할 때 unwrap하기 위해 exclamation point를 사용하지 않아도 된다.
+
+```swift
+var country = Country(name: "Canada", capitalName: "Ottawa")
+print("\(country.name)'s capital city is called \(country.capitalCity.name)")
+// Prints "Canada's capital city is called Ottawa"
+```
+
+
+
+## Strong Reference Cycles for Closures
+
+class의 property로 closure를 할당하고, 그 closure의 body가 instance를 capture하고 있다면, strong reference cycle이 발생할 수 있다. closure의 body에서 `self.someProperty` 와 같이 instance의 다른 property에 접근하거나, `self.someMehtod()` 와 같이 instance의 method를 호출하기 때문에 유발된다. 각각의 경우에서, closure는 self를 capture하여 strong reference cycle을 생성한다.
+
+이러한 이유는 closure 역시 reference type이기 때문이다. 
+
+swift는 *closure capture list* 라는 해결책을 제공한다. 이 해결책에 앞서, self를 참조하는 closure로 인해 strong reference cycle을 생성하는 예제를 보자.
+
+```swift
+class HTMLElement {
+    let name: String
+    let text: String?
+
+    lazy var asHTML: () -> String = {
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+}
+```
+
+다음과 같이 사용할 수 있으며, paragraph variable에 nil을 할당하여 strong reference 끊어도, instance와 closure는 해제되지 않는다.
+
+```swift
+var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
+print(paragraph!.asHTML())
+// Prints "<p>hello, world</p>"
+
+paragraph = nil
+```
+
+
+
+## Resolving Strong Reference Cycles for Closures
+
+closure 정의의 일부로 capture list를 정의하면 이러한 strong reference cycle을 해결할 수 있다. capture list는 closure body에서 하나 이상의 reference type을 capture할 때의 규칙이다. 
+
+> swift는 closure에서 self의 member를 참조할 때, someProperty 나 someMethod() 대신에 self.someProperty 나 self.someMethod() 형식으로 작성하도록 요구한다. 이는 self를 capture하고 있다는 것을 자각시키기 위함이다.
+
+### Defining a Capture List
+
+capture list의 각 item은 weak 이나 unowned와 참조하는 class instance 의 쌍, 혹은 어떤 값으로 초기화된 변수가 되며, 대괄호 내부에 컴마로 구분한다.
+
+closure parameter와 return type 앞에 위치시킨다. 만약, 추론 가능하여 return type이 없고 parameter도 없다면 in 앞에 위치시킨다.
+
+```swift
+lazy var someClosure = {
+    [unowned self, weak delegate = self.delegate]
+    (index: Int, stringToProcess: String) -> String in
+    // closure body goes here
+}
+
+lazy var someClosure = {
+    [unowned self, weak delegate = self.delegate] in
+    // closure body goes here
+}
+```
+
+
+
+### Weak and Unowned References
+
+closure와 capture하는 Instance가 항상 서로를 참조하고있고, 동시에 해제된다면 closure에서 capture를 unowned reference로 정의하자.
+
+대조적으로, capture한 reference가 어느 순간에 nil이 될 수 있다면 weak reference로 정의하자. 
+
+> 만약 capture된 reference가 nil이 될 여지가 없다면 weak이 아닌 unowned로 정의해야한다.
+
