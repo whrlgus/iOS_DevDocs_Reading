@@ -1,0 +1,2 @@
+- handling Non-optional optionals
+- handling future enum cases
