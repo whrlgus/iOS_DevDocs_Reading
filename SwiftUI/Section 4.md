@@ -65,10 +65,18 @@ memoryButton.tap()
 
 ## 4.9 Simulating user interaction
 
+- **.isHittable**: 요소가 존재하고 사용자가 클릭, 탭하고 누를 수 있는지 확인. 요소가 존재하지만 화면에 보이지 않으면 false
+- **.typeText()**: 호출된 컨트롤에 사용자가 타이핑하는 액션을 수행
+- **.press(forDuration:)**: 특정 시간동안 손가락 하나로 터치하는 액션을 수행
+- **.press(forDuration:thenDragTo:)**: `swipe` 메소드는 제스쳐의 속도를 조절할 수 없다. 이 메소드를 사용하면 더 정확한 드래그 액션을 수행할 수 있다.
+- **.waitForExistence()**: 요소가 화면에 바로 나타나지 않을 때 유용하다.
+- https://developer.apple.com/documentation/xctest/xcuielement 에서 더 많은 method와 property를 확인할 수 있다.
+
 ## 4.10 Testing multiple platforms
+
+Cross-platform app의 UI Test를 디자인할 때 가장 좋은 연습은 하나의 테스트 클래스에 특정 OS를 위한 테스트를 유지하는 것이다. conditional Compilation wrapper를 사용하여 타겟 플랫폼과 OS에 코드를 한정할 수 있다.
 
 ## 4.11 Challenge
 
 ## 4.12 Key points
 
-### 
