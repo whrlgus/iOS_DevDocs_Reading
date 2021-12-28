@@ -8,8 +8,6 @@ operation queue로 operation이 관리되면, 더이상 그것을 제어할 수 
 
 이 요청을 보내어 작업을 멈추면, `isCancelled` 연산 프로퍼티는 `true` 를 반환할 것 말고는 자동으로 이뤄지는 것은 없다. 
 
-
-
 `Operation`의 default `start` 구현체는 `isCancelled` flag가 `true` 인지 확인하고, 그렇다면 즉시 빠져나온다. 
 
 ## 10.2 Cancel and cancelAllOperations
