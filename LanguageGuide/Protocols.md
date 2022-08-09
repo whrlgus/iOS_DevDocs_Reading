@@ -1,5 +1,89 @@
 # Protocols
 
+## Adding Protocol Conformance with an Extension
+
+현재 타입의 소스 코드에 접근할 수 없다고 해도, 현재 타입이 새로운 프로토콜을 채택하고 따르도록 확장할 수 있다. 익스텐션은 현재 타입에 새로운 프로퍼티, 메소드, 서브스크립트를 추가할 수 있고, 그 프로토콜이 요구하는 어떠한 요구사항이든지 추가할 수 있다. 
+
+예를 들어, `TextRepresentable` 이라고 불리는 프로토콜은 텍스트로 표현할 수 있는 모든 타입에서 구현될 수 있다. 그 자체의 설명이 될 수도 있고, 현재 상태의 텍스트 버전일 수도 있다:
+
+```swift
+protocol TextRepresentable {
+	var textualDescription: String { get }
+}
+```
+
+`Dice` 클래스는 `TextRepresentable` 을 채택하고 따르도록 확장될 수 있다.
+
+```swift
+extension Dice: TextRepresentable {
+	var textualDescription: Strint {
+		return "A \(sides)-sided dice"
+	}
+}
+```
+
+이 익스텐션이 새로운 프로토콜을 채택하는 것은, `Dice` 의 본래 구현에서 제공하는 것과 같다. 콜론으로 구분되어 타입의 이름 뒤에 프로토콜 이름을 작성하며, 프로토콜 요구사항의 구현은 익스텐션의 괄호 안에서 제공된다.
+
+`Dice` 인스턴스는 `TextRepresentable` 로 다뤄질 수 있다:
+
+```swift
+let d12 = Dice(sides: 12, generator: LinearCongruentialGenerator())
+d12.textualDescription // A 12-sided dice
+```
+
+유사하게, `SnakesAndLadders` 게임 클래스도 `TextRepresentable` 프로토콜을 채택하고 따르도록 확장될 수 있다.
+
+```swift
+extension SnakesAndLadders: TextRepresentable {
+	var textualDescription: String {
+		return "A game of Snakes and Ladders with \(finalSquare) squares"
+	}
+}
+```
+
+### Conditionally Conforming to a Protocol
+
+제네릭 타입은 특정 조건에서만 프로토콜의 요구사항을 만족할 수 있다. 제네릭 타입을 확장할 때 제약을 나열하여 조건적으로 제네릭 타입이 프로토콜을 따르도록 할 수 있다. 제네릭 `where` 절을 사용하여 프로토콜 이름 뒤에 제약을 작성할 수 있다. 
+
+아래 익스텐션은 `Array` 인스턴스에 저장된 인자타입이 `TextRepresentable` 을 따를 때, 그 인스턴스가 `TextRepresentable` 프로토콜을 따르도록 했다.
+
+```swift
+extension Array: TextRepresentable where Element: TextRepresentable {
+	var textualDescription: String {
+		let itemsAsText = self.map { $0.textualDescription }
+		return "[" + itemsAsText.joined(separator: ", ") + "]"
+	}
+}
+let myDice = [d6, d12]
+myDice.textualDescription // [A 6-sided dice, A 12-sided dice]
+```
+
+### Declaring Protocol Adoption with an Extension
+
+만약 타입이 프로토콜의 모든 요구사항을 따르고 있지만, 프로토콜을 채택한다고 표현되지 않았다면, 빈 익스텐션으로 프로토콜을 채택하도록 할 수도 있다.
+
+```swift
+struct Hamster {
+	var name: String
+	var textualDescription: String {
+		return "A hamster named \(name)"
+	}
+}
+extension Hamster: TextRepresentable {}
+```
+
+이제 `Hamster` 인스턴스는 `TextRepresentable`이 요구되는 타입인 곳에 사용될 수 있다.
+
+```swift
+let simonTheHamster = Hamster(name: "Simon")
+let somethingTextRepresentable: TextRepresentable = simonTheHamster
+somthingTextRepresentable.textualDescription // A hamster named Simon
+```
+
+> NOTE
+>
+> 타입은 요구사항을 만족했다고 자동적으로 그 프로토콜을 채택하지 않는다. 반드시 명시적으로 프로토콜을 채택한다고 선언해야 한다.
+
 ## Protocol Inheritance
 
 프로토콜은 하나 이상의 다른 프로토콜을 상속할 수 있고 그것이 상속하는 요구사항 상위에 추가적인 요구사항을 더할 수 있다. 클래스 상속을 위한 신텍스와 유사하지만, 컴마로 쿠분하여 여러개의 상속된 프로토콜을 나열할 수 있다.
