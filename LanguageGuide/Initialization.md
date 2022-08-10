@@ -64,7 +64,7 @@ print(zeroByZero.width, zeroByZero.height)
 
 생성자는 인스턴스의 초기 설정의 한 부분으로서 다른 생성자를 호출할 수 있다. 이 절차는 생성자 위임(initializer delegation)이라고 하며, 여러 생성자에 같은 코드를 생성하지 않도록 해준다. 
 
-생성자 위임이 어떻게 동작하는지, 어떠한 위임 형태가 허용되는지에 대한 규칙은 값 타입과 클래스 타입이 서로 다르다. 값 타입(structure and enumeration)은 상속을 지원하지 않기에, 제공하는 것만 다른 생성자로 위임하면 돼서, 생성자 위임 절차는 상대적으로 간단하다. 반면, 클래스는 다른 클래스를 상속할 수 있다. 즉, 상속한 저장 프로퍼티에 적절한 값이 할당될 수 있게 해야하는 추가적인 책임을 가지고 있는 것이다. 이 책임은 아래 Class Ingeritance and Initialization에 설명되어 있다.
+생성자 위임이 어떻게 동작하는지, 어떠한 위임 형태가 허용되는지에 대한 규칙은 값 타입과 클래스 타입이 서로 다르다. 값 타입(structure and enumeration)은 상속을 지원하지 않기에, 제공하는 것만 다른 생성자로 위임하면 돼서, 생성자 위임 절차는 상대적으로 간단하다. 반면, 클래스는 다른 클래스를 상속할 수 있다. 즉, 상속한 저장 프로퍼티에 적절한 값이 할당될 수 있게 해야하는 추가적인 책임을 가지고 있는 것이다. 이 책임은 아래 Class Inheritance and Initialization에 설명되어 있다.
 
 커스텀 생성자를 작성할 때, 값 타입에는 `self.init` 을 사용하여 내부의 다른 생성자를 참조할 수 있다. `self.init`을 호출하는 것은 생성자 내부에서만 가능하다.
 
@@ -129,8 +129,6 @@ let centerRect = Rect(center: Point(x: 4.0, y: 4.0),
 > NOTE
 >
 > `init()` 과 `init(origin:size:)`를 정의하지 않고 위 예제를 구현할 수 있는 방법으로 extension을 사용하는 것이 있다.
-
-## Class Inheritance and Initialization
 
 ## Class Inheritance and Initialization
 
