@@ -1,5 +1,4 @@
 # Initialization
-
 initialization(초기 내용 설정)은 class, struct, enumeration의 인스턴스를 사용할 수 있도록 준비하는 절차이다. 이 절차는 인스턴스에 있는 각 stored property의 초기값을 설정하고, 필요한 setup을 수행하거나, 새로운 인스턴스를 사용할 준비를 하기 전에 필요한 initialization하는 것을 포함한다.
 
 특정 타입의 새로운 인스턴스를 생성할 때 호출할 수 있는 메소드인, initializer를 정의하여 초기 내용 설정 절차를 구현하게 된다. Objective-C initializer와는 다르게 Swift initializer는 값을 반환하지 않는다. 생성자의 주요 역할은 새로운 인스턴스가 처음으로 사용되기 전에 올바르게 초기화하는 것이다.
@@ -7,10 +6,77 @@ initialization(초기 내용 설정)은 class, struct, enumeration의 인스턴�
 또한, 클래스 타입의 인스턴스는 deinitializer를 구현할 수 있다. 이 것은 해당 클래스 인스턴스가 해제되기 바로 전에 정리하는 로직을 수행한다. 
 
 
-
 ## Setting Initial Values for Stored Properties
+클래스와 구조체는 그 인스턴스가 생성될 때 반드시 모든 저장 속성이 적절한 초기 값으로 설정되어야 한다. 저장 속성이 경정되지 않은 상태로 남겨질 수 없다.
+
+생성자 내부에서 저장 속성에 초기값을 설정하거나 속성 정의의 일부로 기본 속성 값을 할당할 수 있다. 
+
+> NOTE
+> 
+> 저장 속성을 초기값을 할당할 때, 어떠한 속성 옵저버를 호출하지 않고 즉시 값이 설정된다. 
+
+### Initializers
+생성자는 특정 타입의 새로운 인스턴스를 생성할 때 호출된다. 가장 간단한 형태에서, `init` 키워드를 사용하여 작성된 생성자는 매개변수 없는 인스턴스 메소드와 같다. 
+
+```swift
+init() {
+  // 초기화 과정 수행
+}
+```
+
+### Default Property Values
+초기값을 생성자에서 설정할 수도 있지만, 속성 정의의 일부로 *기본 속성 값* 을 명시할 수도 있다. 
+
+> NOTE
+> 
+> 만약 속성이 항상 같은 초기값을 갖는다면, 생성자에서 값을 설정하는 대신에 기본 값을 제공하자. 결과는 동일하지만, 기본 값은 속성 초기화를 선언에 더 강하게 엮어준다. 생성자를 짧게 만들 수 있고, 기본 값으로 부터 타입을 추론할 수 있게 해준다. 또한 기본 값은 기본 생성자와 생성자 상속을 활용할 수 있게 해준다.
+
 
 ## Customizing Initialization
+입력 파라미터와 옵셔널 속성 타입, 혹은 상수 속성을 할당하는 것으로 초기화 과정을 커스터마이즈할 수 있다.
+
+### Initialization Parameters
+
+### Parameter Names and Argument Labels
+함수와 메소드 매개변수에 관해서, 초기화 매개변수는 생성자 구현체 내부에서 쓰일 매개변수 이름과 생성자 호출에 쓰일 인자 레이블을 사용할 수 있다.
+
+그러나, 생성자는 식별을 위한 함수 이름을 갖지 않는다. 그러므로, 생성자의 매개변수의 이름과 타입이 생성자를 식별하는 역할을 대신한다. 이때문에 인자 레이블을 제공하지 않는 경우에 스위프트에서 자동적으로 제공한다.
+
+```Swift
+struct Color {
+  let red, green, blue: Double
+  init(red: Double, green: Double, blue: Double) {
+    self.red = red
+    self.green = green
+    self.blue = blue
+  }
+  init(white: Double) {
+    red = white
+    green = white
+    blue = white
+  }
+}
+
+let magenta = Color(red: 1.0, green: 0.0, blue: 1.0)
+let halfGray = Color(white: 0.5)
+```
+두 생성자는 `Color` 인스턴스를 생성하는 데 사용될 수 있다. 이 생성자는 인자 레이블을 사용하지 않고 호출하는 것이 불가능하다는 것에 주목하자. 인자 레이블은 정의되어 있다면, 항상 호출해야 하며, 그렇지 않을 경우에는 컴파일 타입 에러가 발생한다.
+
+
+### Initializer Parameters Without Argument Labels
+
+생성자 매개변수를 위한 인자 레이블을 사용하고 싶지 않다면, 명시적인 인자 레이블을 작성하지 않고 `underscore(_)` 를 작성하자. 
+
+### Optional Property Types
+값을 갖지 않음이 허용된 없는 저장 속성은 옵셔널 타입으로 선언하자. 옵셔널 타입의 속성은 자동적으로 `nil` 값으로 초기화 된다.
+
+### Assigning Constant Properties During Initialization
+초기화 과정에서 상수 속성에 값을 할당할 수 있다. 한번 값이 할당되면 더이상 변경될 수 없다.
+
+> NOTE
+> 
+> 클래스 인스턴스에서 상수 속성은 도입된 클래스에서만 초기화할 수 있다.
+
 
 ## Default Initializers
 
@@ -482,9 +548,62 @@ for item in breakfastList {
 
 ## Failable Initializers
 
+초기화가 실패할 수 있는 클래스, 구초제, 이뉴머레이션을 정의하는 것은 유용하다. 이 실패는 타당하지 않은 초기화 매개변수 값, 필요한 외부 자원의 부재, 혹은 초기화 성공을 막는 다른 조건에 의해 유발될 수 있다.
+
+이를 다루기위해, 하나 이상의 실패 가능한 초기화함수를 정의하자. `init?` 와 같이 작성하면 된다. 
+
+> NOTE
+> 
+> 실패 가능한 생성자와 그렇지 않은 생성자를 같은 매개변수 타입과 이름으로 정의할 수 없다.
+
+실패 가능한 생성자는 초기화하는 타입의 옵셔널 값을 생성한다.
+
+> NOTE
+> 
+> 엄밀히 말해 생성자는 값을 반환하지 않는다. 그 역할은 초기화가 끝나는 시점에 `self`가 완전히 초기화되는 것을 보장하는 것이다. 실패에 `return nil` 을 작성하지만, 성공시에는 `return` 키워드를 사용하지 않는다.
+
+### Failable Initializers for Enumerations
+하나 이상의 매개변수에 따라서 적절한 열거형 유형을 선택하기 위해 실패가능한 생성자를 사용할 수 있다.
+
+### Failable initializers for Enumerations with Raw Values
+raw 값이 있는 열거형은 자동적으로 실패가능한 생성자(`init?(rawValue:)`)를 받는다. 
+
+### Propagation of Initialization Failure
+클래스, 구조체, 열거형의 실패가능한 생성자는 동일 타입의 다른 실패가능한 생성자로 위임할 수 있다. 유사하게, 서브클래스의 실패가능한 클래스는 슈퍼클래스의 실패가능한 생성자로 위임할 수 있다.
+
+각 경우에 초기화가 실패하면 전체 초기화 과정은 즉시 실패하게 되고, 더이상의 초기화 코드는 실행되지 않는다. 
+
+### Overriding a Failable Initializer
+슈퍼클래스의 실패가능한 생성자를 오버라이드할 수 있다. 또한, 실패가능한 생성자를 그렇지 않은 생성자로 오버라이드 할 수도 있다. 슈퍼클래스는 실패할 수 있었지만, 서브 클래스는 그렇지 않도록 정의할 수 있게 된다.
+
+이 경우에 슈퍼클래스의 실패가능한 생성자를 강제 언래핑하여 상위로 위임할 수 있다.
+
+> NOTE
+> 
+> 실패가능한 생성자를 그렇지 않은 생성자로 오버라이드 할 수 있지만, 반대는 불가능하다. 
+
+
+### The init! Failable Initializer
+`init?` 에서 `init!` 으로, 혹은 반대로 위임 가능하며, 상속도 가능하다. `init` 에서 `init!` 으로 위임가능하지만, `init!` 이 초기화 실패를 한다면 런타임 에러가 발생한다. 
+
 ## Required Initializers
+모든 서브클래스가 특정 생성자를 반드시 구현하길 원한다면 `required` 지정자를 작성한다. 
+
+```Swift
+class SomeClass {
+  required init() {
+  
+  }
+}
+```
+`required` 지정자는 모든 서브클래스 구현에 작성되어야 한다. `override` 지정자는 붙이지 않는다.
+
+> NOTE
+> 상속된 생성자로 요구사항을 만족했다면, required 생성자 구현은 제공할 필요가 없다. 
 
 ## Setting a Default Property Value with a Closure or Function
+저장 속성의 기본 값을 클로저나 전역 함수를 이용하여 설정할 수 있다. 새로운 인스턴스가 초기화될 때마나 이 클로저나 함수는 호출되어 반환값이 기본 값으로 설정된다.
 
-
-
+> NOTE
+> 
+> 속성을 초기화하기위해 클로져를 사용하면, 클로져의 실행 시점에 인스턴스는 아직 완전히 초기화 되지 않았음을 기억하자. 즉, 기본 값이 있더라도 다른 속성 값에 접근할 수 없다. `self` 속성에 접근하거나 인스턴스 메소드를 사용할 수도 없다.
