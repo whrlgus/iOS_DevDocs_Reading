@@ -1,0 +1,104 @@
+{
+  "main": {
+    "id": "a8f42949a8f05db5",
+    "type": "split",
+    "children": [
+      {
+        "id": "a4640b9e83b682c8",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Expert Swift/6. Sequences, Collections & Algorithms.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "95836f80b1f042f1",
+    "type": "split",
+    "children": [
+      {
+        "id": "52a078ffa2231331",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bb125370c9bf453c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "e2c6d728658e1f6c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "aa0b8ff654d2cac8",
+    "type": "split",
+    "children": [
+      {
+        "id": "5ca71a84c11b5bc4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3528cbc5372b086a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Expert Swift/6. Sequences, Collections & Algorithms.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "a4640b9e83b682c8",
+  "lastOpenFiles": [
+    "Expert Swift/5. Numerics & Ranges.md",
+    "Expert Swift/4. Generics Notes.md",
+    "Expert Swift/4. Generics.md",
+    "LanguageGuide/Generics.md",
+    "Expert Swift/4. Generics 정리.md",
+    "Untitled.md",
+    "README.md",
+    "Expert Swift/3. Protocols.md",
+    "Expert Swift/2. Types & Mutation.md",
+    "Expert Swift/1. Introduction.md"
+  ]
+}

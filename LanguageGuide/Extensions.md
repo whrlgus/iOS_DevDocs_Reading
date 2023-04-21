@@ -201,9 +201,6 @@ extension Int {
 ```
 
 ## Nested Types
-
-## Nested Types
-
 extension은 class, struct, enum에 중첩 타입을 추가할 수 있다.
 
 ```swift
