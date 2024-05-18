@@ -1,10 +1,12 @@
+from collections import OrderedDict
+
 input_vtt = '225.vtt'
 output_vtt = '255con.vtt'
 
 f = open(input_vtt, "r")
 string = f.read()
 f.close()
-a = string.split("\n\n")
+a = list(OrderedDict.fromkeys(string.split("\n\n")))
 
 new = ""
 time = ""
@@ -17,7 +19,7 @@ for ele in a:
         continue
 
     chunk = b[1].strip()
-    if chunk[-1] == '.':
+    if chunk[-1] in ['.', '?']:
         if time == "":
             new += (ele + "\n\n")
         else:
