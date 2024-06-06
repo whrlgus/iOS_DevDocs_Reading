@@ -1,7 +1,9 @@
+import sys
 from collections import OrderedDict
 
-input_vtt = '225.vtt'
-output_vtt = '255con.vtt'
+input_vtt = sys.argv[1]
+inputNameElements = sys.argv[1].split(".")
+output_vtt = inputNameElements[0] + "con." + inputNameElements[1]
 
 f = open(input_vtt, "r")
 string = f.read()
@@ -14,14 +16,14 @@ tmp = ""
 for ele in a:
     b = ele.split("\n")
     c = b[0].split(" --> ")
-    if len(b) == 1:
+    if len(b) == 1 or b[0] == "" or ele.startswith("WEBVTT"):
         new += (ele + "\n\n")
         continue
-
-    chunk = b[1].strip()
+        
+    chunk = " ".join( x.strip() for x in b[1:] ).strip()
     if chunk[-1] in ['.', '?']:
         if time == "":
-            new += (ele + "\n\n")
+            new += (b[0] + "\n" + chunk + "\n\n")
         else:
             time += " --> " + c[1]
             tmp += chunk
